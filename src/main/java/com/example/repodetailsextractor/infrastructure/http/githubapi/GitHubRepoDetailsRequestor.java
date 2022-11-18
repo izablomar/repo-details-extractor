@@ -12,8 +12,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class GitHubRepoDetailsRequestor implements RepoDetailsRequestor {
 
-    private GitHubUrlBuilder gitHubUrlBuilder;
-    private final WebClient webClient;
+    private WebClient webClient;
 
     public GitHubRepoDetailsRequestor(WebClient.Builder builder, @Value("${repo-details-extractor.out.github.url}") String baseUrl) {
         this.webClient = builder.baseUrl(baseUrl)
@@ -21,7 +20,7 @@ public class GitHubRepoDetailsRequestor implements RepoDetailsRequestor {
     }
 
     @Override
-    public Mono<RepoDetails> request(final String owner, final String repoName) {
+    public Mono<RepoDetails> request(String owner, String repoName) {
         return webClient.get()
                 .uri("/{owner}/{repoName}", owner, repoName)
                 .accept(MediaType.APPLICATION_JSON)

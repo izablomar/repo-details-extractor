@@ -19,13 +19,12 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
-import java.time.Instant;
 
 class RepoDetailsRestControllerIntegrationTest {
 
     private static MockWebServer mockWebServer;
 
-    private static RepoDetailsService repoDetailsService;
+    private static RepoDetailsRestController repoDetailsRestController;
 
     private static ResourceLoader resourceLoader;
 
@@ -33,8 +32,8 @@ class RepoDetailsRestControllerIntegrationTest {
     static void setUp() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
-        repoDetailsService = new RepoDetailsService(new GitHubRepoDetailsRequestor(WebClient.builder(), mockWebServer.url("/")
-                .toString()));
+        repoDetailsRestController = new RepoDetailsRestController(new RepoDetailsService(new GitHubRepoDetailsRequestor(WebClient.builder(), mockWebServer.url("/")
+                .toString())));
         resourceLoader = new DefaultResourceLoader();
     }
 
@@ -50,7 +49,7 @@ class RepoDetailsRestControllerIntegrationTest {
         mockApiResponse(HttpStatus.OK.value(), mockedResponse);
 
         //when
-        Mono<RepoDetails> resultRepoDetails = repoDetailsService.findRepoDetails("testOwner", "testRepo");
+        Mono<RepoDetails> resultRepoDetails = repoDetailsRestController.getRepoDetails("testOwner", "testRepo");
 
         //then
         RepoDetails expectedRepoDetails = RepoDetails.builder()
@@ -58,7 +57,7 @@ class RepoDetailsRestControllerIntegrationTest {
                 .description("This repo is for demonstration purposes only.")
                 .cloneUrl("https://github.com/octocat/Spoon-Knife.git")
                 .stars(11391)
-                .createdAt(Instant.parse("2011-01-27T19:30:43Z"))
+                .createdAt("2011-01-27T19:30:43Z")
                 .build();
 
         StepVerifier.create(resultRepoDetails)
@@ -74,7 +73,7 @@ class RepoDetailsRestControllerIntegrationTest {
         mockApiResponse(HttpStatus.NOT_FOUND.value(), mockedResponse);
 
         //when
-        Mono<RepoDetails> resultRepoDetails = repoDetailsService.findRepoDetails("testOwner", "testRepo");
+        Mono<RepoDetails> resultRepoDetails = repoDetailsRestController.getRepoDetails("testOwner", "testRepo");
 
         //then
         ExceptionalRepoDetails expectedRepoDetails = new ExceptionalRepoDetails("There is no such public repository for given owner");
@@ -92,7 +91,7 @@ class RepoDetailsRestControllerIntegrationTest {
         mockApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), mockedResponse);
 
         //when
-        Mono<RepoDetails> resultRepoDetails = repoDetailsService.findRepoDetails("testOwner", "testRepo");
+        Mono<RepoDetails> resultRepoDetails = repoDetailsRestController.getRepoDetails("testOwner", "testRepo");
 
         //then
         ExceptionalRepoDetails expectedRepoDetails = new ExceptionalRepoDetails("Unknown external issue occurred while accessing repository data");
@@ -110,7 +109,7 @@ class RepoDetailsRestControllerIntegrationTest {
         mockApiResponse(HttpStatus.OK.value(), mockedResponse);
 
         //when
-        Mono<RepoDetails> resultRepoDetails = repoDetailsService.findRepoDetails("testOwner", "testRepo");
+        Mono<RepoDetails> resultRepoDetails = repoDetailsRestController.getRepoDetails("testOwner", "testRepo");
 
         //then
         StepVerifier.create(resultRepoDetails)

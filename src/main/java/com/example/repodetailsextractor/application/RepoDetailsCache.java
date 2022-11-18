@@ -3,7 +3,9 @@ package com.example.repodetailsextractor.application;
 import com.example.repodetailsextractor.domain.RepoDetails;
 import reactor.core.publisher.Mono;
 
-public interface RepoDetailsRequestor {
+public interface RepoDetailsCache {
 
-    Mono<RepoDetails> request(String owner, String repoName);
+    Mono<Boolean> write(String key, RepoDetails repoDetails);
+
+    Mono<RepoDetails> read(String key);
 }

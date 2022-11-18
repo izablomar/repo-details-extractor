@@ -10,8 +10,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Instant;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +23,7 @@ class GitHubApiResponseActionResolverUnitTest {
         gitHubRepoDetailsResponse.setDescription("testRepoDescription");
         gitHubRepoDetailsResponse.setCloneUrl("testUrl.com");
         gitHubRepoDetailsResponse.setStargazersCount(456);
-        gitHubRepoDetailsResponse.setCreatedAt(Instant.ofEpochMilli(10000));
+        gitHubRepoDetailsResponse.setCreatedAt("2011-01-27T19:30:43Z");
 
         ClientResponse clientResponseMock = mock(ClientResponse.class);
         when(clientResponseMock.statusCode()).thenReturn(HttpStatus.OK);
@@ -36,7 +34,7 @@ class GitHubApiResponseActionResolverUnitTest {
                 .description("testRepoDescription")
                 .cloneUrl("testUrl.com")
                 .stars(456)
-                .createdAt(Instant.ofEpochMilli(10000))
+                .createdAt("2011-01-27T19:30:43Z")
                 .build();
 
         GitHubRepoDetailsResponseMapper gitHubRepoDetailsResponseMapperMock = mock(GitHubRepoDetailsResponseMapper.class);

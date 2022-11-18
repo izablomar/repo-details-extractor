@@ -1,12 +1,10 @@
 package com.example.repodetailsextractor.application;
 
-import com.example.repodetailsextractor.application.exception.ExceptionalRepoDetails;
-import com.example.repodetailsextractor.application.exception.RepoPredictedException;
 import com.example.repodetailsextractor.domain.RepoDetails;
-import org.springframework.stereotype.Service;
+import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
-@Service
+@NoArgsConstructor
 public class RepoDetailsService {
 
     private RepoDetailsRequestor repoDetailsRequestor;
@@ -15,8 +13,11 @@ public class RepoDetailsService {
         this.repoDetailsRequestor = repoDetailsRequestor;
     }
 
-    public Mono<RepoDetails> findRepoDetails(final String owner, final String repoName) {
-        return repoDetailsRequestor.request(owner, repoName)
-                .onErrorResume(RepoPredictedException.class, exception -> Mono.just(new ExceptionalRepoDetails(exception.getMessage())));
+    public Mono<RepoDetails> findRepoDetails(String owner, String repoName) {
+        return requestRepoDetails(owner, repoName);
+    }
+
+    protected Mono<RepoDetails> requestRepoDetails(String owner, String repoName) {
+        return repoDetailsRequestor.request(owner, repoName);
     }
 }

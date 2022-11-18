@@ -1,8 +1,9 @@
 package com.example.repodetailsextractor.domain;
 
-import lombok.*;
-
-import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -14,6 +15,6 @@ public class RepoDetails {
     private String description;
     private String cloneUrl;
     private Integer stars;
-    private Instant createdAt;
+    private String createdAt;
 
 }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GitHubRepoDetailsResponse {
@@ -14,6 +12,6 @@ public class GitHubRepoDetailsResponse {
     private String description;
     private String cloneUrl;
     private Integer stargazersCount;
-    private Instant createdAt;
+    private String createdAt;
 
 }
